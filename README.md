@@ -1,2 +1,0 @@
-# xiaoRing.github.io
-Ringing
