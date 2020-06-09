@@ -5,22 +5,22 @@
   
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <link rel="dns-prefetch" href="http://evilring.me">
-  <title>evilRing.me</title>
+  <link rel="dns-prefetch" href="http://xiaoring.ml">
+  <title>xiaoRing.ml</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="This is me!">
 <meta name="keywords" content="ABC">
 <meta property="og:type" content="website">
-<meta property="og:title" content="evilRing.me">
-<meta property="og:url" content="http://evilring.me/index.html">
-<meta property="og:site_name" content="evilRing.me">
+<meta property="og:title" content="xiaoRing.ml">
+<meta property="og:url" content="http://xiaoring.ml/index.html">
+<meta property="og:site_name" content="xiaoRing.ml">
 <meta property="og:description" content="This is me!">
 <meta property="og:locale" content="zh_CN">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="evilRing.me">
+<meta name="twitter:title" content="xiaoRing.ml">
 <meta name="twitter:description" content="This is me!">
   
-    <link rel="alternative" href="/atom.xml" title="evilRing.me" type="application/atom+xml">
+    <link rel="alternative" href="/atom.xml" title="xiaoRing.ml" type="application/atom+xml">
   
   
     <link rel="icon" href="/favicon.png">
@@ -170,6 +170,92 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-vulhub" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/10/17/vulhub/">CentOS搭建vulhub</a>
+    </h1>
+  
+
+        
+        <a href="/2019/10/17/vulhub/" class="archive-article-date">
+  	<time datetime="2019-10-17T03:16:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-10-17</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="CentOS搭建vulhub"><a href="#CentOS搭建vulhub" class="headerlink" title="CentOS搭建vulhub"></a>CentOS搭建vulhub</h2><p>1.centos安装成功后NAT模式下获取不到ip地址<br>虚拟机执行dhclient<br>2.安装必备工具</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">1.安装git</span><br><span class="line">yum -y install git  </span><br><span class="line">2.安装pip</span><br><span class="line">yum -y install epel-release  </span><br><span class="line">yum -y install python-pip</span><br><span class="line">pip install --upgrade pip</span><br></pre></td></tr></table></figure>
+
+<p>3.安装docker </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">yum -y install docker</span><br><span class="line">systemctl start docker 启动docker</span><br><span class="line">systemctl docker status 查看dacker状态</span><br><span class="line">systemctl docker stop  关闭docker</span><br></pre></td></tr></table></figure>
+
+<p>4.安装docker-compose</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">1.下载（登录github查看需要的版本）</span><br><span class="line">curl -L &quot;https://github.com/docker/compose/releases/download/1.25.0/docker-compose-$(uname -s)-$(uname -m)&quot; -o /usr/local/bin/docker-compose</span><br><span class="line">2.赋予执行权限</span><br><span class="line">chmod +x /usr/local/bin/docker-compose</span><br><span class="line">3.查看安装版本，确认安装成功</span><br><span class="line">docker-compose --version</span><br></pre></td></tr></table></figure>
+
+<p>5.下载vulhub<code>git clone https://github.com/vulhub/vulhub</code><br>6.进入vulhub漏洞目录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">docker-compose build 编译</span><br><span class="line">docker-compose up -d 运行</span><br><span class="line">docker-compose down 不离开漏洞目录，可移除当前环境</span><br><span class="line">docker-compose ps  查看当前运行的环境以及端口信息</span><br></pre></td></tr></table></figure>
+
+<p>vulhub漏洞文档[<a href="https://vulhub.org/#/environments/]" target="_blank" rel="noopener">https://vulhub.org/#/environments/]</a><br>7.当访问不到漏洞环境时</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1.关闭防火墙 </span><br><span class="line">systemctl stop firewalld</span><br><span class="line">2.关闭SElinux </span><br><span class="line">vi /etc/selinux/config</span><br><span class="line">修改SELINUX为disable</span><br></pre></td></tr></table></figure>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">学习</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/10/17/vulhub/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-信息" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -190,7 +276,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="信息"><a href="#信息" class="headerlink" title="信息"></a>信息</h1><h4 id="域名"><a href="#域名" class="headerlink" title="域名"></a>域名</h4><p><img src="//evilring.me/2019/09/17/信息/1566531346653.png" alt="Alt text"><br>1.首先利用whois搜集网站域名的注册信息<br><a href="http://whois.chinaz.com/" target="_blank" rel="noopener">站长之家</a><br>2.考虑dns域传送问题<br><a href="http://www.anquan.us/static/drops/papers-64.html" target="_blank" rel="noopener">域传送漏洞</a><br><a href="https://www.waitalone.cn/dns-domain-transfer-exploits.html" target="_blank" rel="noopener">域传送利用</a><br>3.子域名挖掘<br>layer子域名挖掘机<br>subDomainsBrute<br>wydomain</p>
+        <h1 id="信息"><a href="#信息" class="headerlink" title="信息"></a>信息</h1><h4 id="域名"><a href="#域名" class="headerlink" title="域名"></a>域名</h4><p><img src="//xiaoring.ml/2019/09/17/信息/1566531346653.png" alt="Alt text"><br>1.首先利用whois搜集网站域名的注册信息<br><a href="http://whois.chinaz.com/" target="_blank" rel="noopener">站长之家</a><br>2.考虑dns域传送问题<br><a href="http://www.anquan.us/static/drops/papers-64.html" target="_blank" rel="noopener">域传送漏洞</a><br><a href="https://www.waitalone.cn/dns-domain-transfer-exploits.html" target="_blank" rel="noopener">域传送利用</a><br>3.子域名挖掘<br>layer子域名挖掘机<br>subDomainsBrute<br>wydomain</p>
         
           <a class="article-more-a" href="/2019/09/17/信息/#more">more >></a>
         
@@ -407,7 +493,7 @@
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2019 Ring
+    		&copy; 2020 Ring
     	</div>
       	<div class="footer-right">
       		<a href="https://evilring.me/" target="_blank">个人博客</a> <a href="https://github.com/xiaoRing/" target="_blank">github</a> 
@@ -490,11 +576,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+                <a href="javascript:void(0)" class="js-tag color3">学习</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">学习</a>
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
             
             <div class="clearfix"></div>
