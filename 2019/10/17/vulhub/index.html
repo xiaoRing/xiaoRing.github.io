@@ -8,18 +8,18 @@
   <link rel="dns-prefetch" href="http://xiaoring.ml">
   <title>CentOS搭建vulhub | xiaoRing.ml</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="CentOS搭建vulhub1.centos安装成功后NAT模式下获取不到ip地址虚拟机执行dhclient2.安装必备工具 1234561.安装gityum -y install git  2.安装pipyum -y install epel-release  yum -y install python-pippip install --upgrade pip  3.安装docker  1234">
+  <meta name="description" content="Just a few steps! 1.centos安装成功后NAT模式下获取不到ip地址虚拟机执行dhclient2.安装必备工具 1234561.安装gityum -y install git  2.安装pipyum -y install epel-release  yum -y install python-pippip install --upgrade pip  3.安装docker">
 <meta name="keywords" content="学习">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CentOS搭建vulhub">
 <meta property="og:url" content="http://xiaoring.ml/2019/10/17/vulhub/index.html">
 <meta property="og:site_name" content="xiaoRing.ml">
-<meta property="og:description" content="CentOS搭建vulhub1.centos安装成功后NAT模式下获取不到ip地址虚拟机执行dhclient2.安装必备工具 1234561.安装gityum -y install git  2.安装pipyum -y install epel-release  yum -y install python-pippip install --upgrade pip  3.安装docker  1234">
+<meta property="og:description" content="Just a few steps! 1.centos安装成功后NAT模式下获取不到ip地址虚拟机执行dhclient2.安装必备工具 1234561.安装gityum -y install git  2.安装pipyum -y install epel-release  yum -y install python-pippip install --upgrade pip  3.安装docker">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:updated_time" content="2020-06-09T09:25:05.877Z">
+<meta property="og:updated_time" content="2020-07-01T01:24:08.618Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CentOS搭建vulhub">
-<meta name="twitter:description" content="CentOS搭建vulhub1.centos安装成功后NAT模式下获取不到ip地址虚拟机执行dhclient2.安装必备工具 1234561.安装gityum -y install git  2.安装pipyum -y install epel-release  yum -y install python-pippip install --upgrade pip  3.安装docker  1234">
+<meta name="twitter:description" content="Just a few steps! 1.centos安装成功后NAT模式下获取不到ip地址虚拟机执行dhclient2.安装必备工具 1234561.安装gityum -y install git  2.安装pipyum -y install epel-release  yum -y install python-pippip install --upgrade pip  3.安装docker">
   
     <link rel="alternative" href="/atom.xml" title="xiaoRing.ml" type="application/atom+xml">
   
@@ -187,9 +187,13 @@
         
       </header>
     
+
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="CentOS搭建vulhub"><a href="#CentOS搭建vulhub" class="headerlink" title="CentOS搭建vulhub"></a>CentOS搭建vulhub</h2><p>1.centos安装成功后NAT模式下获取不到ip地址<br>虚拟机执行dhclient<br>2.安装必备工具</p>
+		
+		
+        <p>Just a few steps!</p>
+<p>1.centos安装成功后NAT模式下获取不到ip地址<br>虚拟机执行dhclient<br>2.安装必备工具</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">1.安装git</span><br><span class="line">yum -y install git  </span><br><span class="line">2.安装pip</span><br><span class="line">yum -y install epel-release  </span><br><span class="line">yum -y install python-pip</span><br><span class="line">pip install --upgrade pip</span><br></pre></td></tr></table></figure>
 
 <p>3.安装docker </p>
@@ -203,6 +207,8 @@
 
 <p>vulhub漏洞文档[<a href="https://vulhub.org/#/environments/]" target="_blank" rel="noopener">https://vulhub.org/#/environments/]</a><br>7.当访问不到漏洞环境时</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1.关闭防火墙 </span><br><span class="line">systemctl stop firewalld</span><br><span class="line">2.关闭SElinux </span><br><span class="line">vi /etc/selinux/config</span><br><span class="line">修改SELINUX为disable</span><br></pre></td></tr></table></figure>
+      
+
       
 
       
@@ -316,6 +322,15 @@
   
 <nav id="article-nav">
   
+    <a href="/2020/01/17/XSS1-1/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          XSS攻击原理
+        
+      </div>
+    </a>
+  
   
     <a href="/2019/09/17/信息/" id="article-nav-older" class="article-nav-link-wrap">
       <div class="article-nav-title">信息</div>
@@ -382,7 +397,7 @@
 		toc_hide_index: true,
 		root: "/",
 		innerArchive: true,
-		showTags: false
+		showTags: true
 	}
 </script>
 
@@ -444,11 +459,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">学习</a>
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+                <a href="javascript:void(0)" class="js-tag color3">学习</a>
               </li>
             
             <div class="clearfix"></div>

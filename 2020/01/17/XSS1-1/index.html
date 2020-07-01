@@ -6,19 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://xiaoring.ml">
-  <title>Archives: 2019/8 | xiaoRing.ml</title>
+  <title>XSS攻击原理 | xiaoRing.ml</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="This is me!">
-<meta name="keywords" content="ABC">
-<meta property="og:type" content="website">
-<meta property="og:title" content="xiaoRing.ml">
-<meta property="og:url" content="http://xiaoring.ml/archives/2019/08/index.html">
+  <meta name="description" content="XSS（cross site script跨站脚本） alert(document.cookie()) 原理XSS（cross site script跨站脚本），攻击者向web页面插入恶意的html代码，当用户浏览该网页时，嵌入web页面的恶意代码会被执行，从而达到恶意攻击用户的特殊目的。（本质上属于代码注入） 类型 反射型跨站代码一般存在某个链接中，当用户访问链接时，跨站代码就会被运行 存储型跨">
+<meta name="keywords" content="学习">
+<meta property="og:type" content="article">
+<meta property="og:title" content="XSS攻击原理">
+<meta property="og:url" content="http://xiaoring.ml/2020/01/17/XSS1-1/index.html">
 <meta property="og:site_name" content="xiaoRing.ml">
-<meta property="og:description" content="This is me!">
+<meta property="og:description" content="XSS（cross site script跨站脚本） alert(document.cookie()) 原理XSS（cross site script跨站脚本），攻击者向web页面插入恶意的html代码，当用户浏览该网页时，嵌入web页面的恶意代码会被执行，从而达到恶意攻击用户的特殊目的。（本质上属于代码注入） 类型 反射型跨站代码一般存在某个链接中，当用户访问链接时，跨站代码就会被运行 存储型跨">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:updated_time" content="2020-07-01T01:46:04.188Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="xiaoRing.ml">
-<meta name="twitter:description" content="This is me!">
+<meta name="twitter:title" content="XSS攻击原理">
+<meta name="twitter:description" content="XSS（cross site script跨站脚本） alert(document.cookie()) 原理XSS（cross site script跨站脚本），攻击者向web页面插入恶意的html代码，当用户浏览该网页时，嵌入web页面的恶意代码会被执行，从而达到恶意攻击用户的特殊目的。（本质上属于代码注入） 类型 反射型跨站代码一般存在某个链接中，当用户访问链接时，跨站代码就会被运行 存储型跨">
   
     <link rel="alternative" href="/atom.xml" title="xiaoRing.ml" type="application/atom+xml">
   
@@ -168,60 +169,265 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-XSS1-1" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/08/21/Ring/" class="archive-article-date">
-  	<time datetime="2019-08-21T05:08:35.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-21</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/08/21/Ring/">Ring</a>
+    <h1 class="article-title" itemprop="name">
+      XSS攻击原理
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2020/01/17/XSS1-1/" class="archive-article-date">
+  	<time datetime="2020-01-17T04:11:52.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-01-17</time>
+</a>
+        
+      </header>
+    
+
+    <div class="article-entry" itemprop="articleBody">
+      
+		
+		
+        <p>XSS（cross site script跨站脚本）</p>
+<p>alert(document.cookie())</p>
+<h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p>XSS（cross site script跨站脚本），攻击者向web页面插入恶意的html代码，当用户浏览该网页时，嵌入web页面的恶意代码会被执行，从而达到恶意攻击用户的特殊目的。（本质上属于代码注入）</p>
+<h3 id="类型"><a href="#类型" class="headerlink" title="类型"></a>类型</h3><ul>
+<li>反射型<br>跨站代码一般存在某个链接中，当用户访问链接时，跨站代码就会被运行</li>
+<li>存储型<br>跨站代码存储在服务端的数据库中，只要请求了对应的网页，跨站代码就会被运行</li>
+<li>Dom型<br>只在客户端页面显示，由于客户端脚本自身的解析不对导致的安全问题（验证漏洞需要查看审查元素中浏览器对源码的解析结果）<br>说明：<br>问题主要发生在第二步骤，在加载js脚本的过程中注入了恶意代码，从而在第三步被执行，达到了修改dom树的目的，从而称为dom型XSS。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">浏览器解析步骤：</span><br><span class="line">1.解析html结构</span><br><span class="line">2.加载Js脚本和样式表文件</span><br><span class="line">3.解析并执行脚本代码</span><br><span class="line">4.DOM树构建完成</span><br><span class="line">5.加载图片等外部资源</span><br><span class="line">6.页面加载完毕</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>页面script标签元素从页面输入直接获取用户输入并输出，导致的XSS。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1/dom-xss.html?name=&lt;script&gt;alert(/xss/)&lt;/script&gt;</span><br><span class="line"></span><br><span class="line">&lt;HTML&gt;</span><br><span class="line">&lt;TITLE&gt;Welcome!&lt;/TITLE&gt;</span><br><span class="line">Hi</span><br><span class="line">&lt;script&gt;</span><br><span class="line">	var pos=document.URL.indexOf(&quot;name=&quot;)+5;</span><br><span class="line">	document.write(decodeURL(document.URL.subString(pos,document.URL.length)));</span><br><span class="line">&lt;/script&gt;</span><br><span class="line">&lt;BR&gt;</span><br><span class="line">Welcome!</span><br><span class="line">&lt;/HTML&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="查找步骤"><a href="#查找步骤" class="headerlink" title="查找步骤"></a>查找步骤</h3><h6 id="web测试"><a href="#web测试" class="headerlink" title="web测试"></a>web测试</h6><p>a）插入特征字符串寻找可控点<br>b）尝试闭合<br>c）测试javascript<br>d）查看结果</p>
+<h6 id="代码审计方式"><a href="#代码审计方式" class="headerlink" title="代码审计方式"></a>代码审计方式</h6><p>a) 是否配置了全局的拦截器、过滤器（查看web.xml和全局搜索filter）<br>b) 检查jsp页面，是否存在将请求参数直接返回你的请求，是否存在未做任何处理就将数据向前端输出<br>c) 检查java文件，是否存在将请求参数未做任何处理就存储到数据库中<br>d) 检查java文件，搜索out.print，是否存在未对参数进行处理，直接向客户端输出的情况</p>
+<h3 id="利用"><a href="#利用" class="headerlink" title="利用"></a>利用</h3><p>针对用户</p>
+<ul>
+<li><p>身份盗用   窃取用户cookie，盗用用户身份登录网站</p>
+</li>
+<li><p>钓鱼欺骗   大量发送垃圾邮件，引诱用户给出敏感信息</p>
+</li>
+<li><p>网站挂马  运用脚本运行的漏洞下载木马</p>
+</li>
+<li><p>信息泄露 识别用户的浏览器以及安装的软件</p>
+</li>
+<li><p>…<br>针对web服务</p>
+</li>
+<li><p>劫持后台</p>
+</li>
+<li><p>篡改页面</p>
+</li>
+<li><p>内网扫描</p>
+</li>
+<li><p>蠕虫</p>
+</li>
+<li><p>…</p>
+<h3 id="常见的业务场景"><a href="#常见的业务场景" class="headerlink" title="常见的业务场景"></a>常见的业务场景</h3><p>重灾区：评论，留言，个人信息，订单信息<br>针对型：站内信，网页即使通讯，私信，意见反馈<br>存在风险：搜索框，当前目录，图片属性</p>
+<h3 id="防御（对输入进行过滤，对输出进行编码）"><a href="#防御（对输入进行过滤，对输出进行编码）" class="headerlink" title="防御（对输入进行过滤，对输出进行编码）"></a>防御（对输入进行过滤，对输出进行编码）</h3><table>
+<thead>
+<tr>
+<th align="left">解决方案</th>
+<th align="left">优点</th>
+<th align="center">缺点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">前端输入过滤</td>
+<td align="left">对innerHTML的内容进行检查，对eval中用户输入的参数进行检查，对于使用的js库（例如jquery)以及Flash进行检查，以免使用了存在XSS漏洞的js库和swf文件。可减轻服务器压力。</td>
+<td align="center">仅对DOM型XSS有效，对于其他类型XSS，可通过抓包绕过</td>
+</tr>
+<tr>
+<td align="left">前端输入编码</td>
+<td align="left">对要输入的数据进行编码转义，将输入解读为数据而不是XSS。</td>
+<td align="center">影响部分需求</td>
+</tr>
+<tr>
+<td align="left">服务器端处理</td>
+<td align="left">服务器端转义输入的左右尖括号、单双引号等符号，对HTML标签进行编码，这是主流的防御XSS的方法，可有效防御一般的XSS攻击</td>
+<td align="center">无法防御部分DomXSS攻击，以及flash xss攻击</td>
+</tr>
+<tr>
+<td align="left">CSP</td>
+<td align="left">规范了网页中某个标签所能加载的第三方域，从协议层把一些存在安全隐患的用法默认给干掉，把同源同域更发挥到极致，结合禁止内联脚本的机制，可以有效防御大部分XSS攻击</td>
+<td align="center">需要在服务端进行配置，而且一旦配置不当，正常业务也会收到影响。配置不严格又会导致绕过。对于大型的、复杂的网站业务，维护成本较高</td>
+</tr>
+<tr>
+<td align="left">X-XSS-Protection</td>
+<td align="left">依赖于浏览器的XSS筛选器，仅对部分XSS payload有效</td>
+<td align="center">对网站业务有一定程度的影响</td>
+</tr>
+<tr>
+<td align="left">XSS防火墙</td>
+<td align="left">依赖前端js组件，HTML5API等，对网页中的事件进行监控，拦截恶意脚本的运行，防止发生XSS行为</td>
+<td align="center">前端js代码暴露，容易造成bypass</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>对开发而言：对用户输入进行校验/转义/长度限制<br>转义：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">	特殊字符	 实体编码</span><br><span class="line">		&amp;		  &amp;amp;</span><br><span class="line">		&lt;		  &amp;lt;</span><br><span class="line">转义	   &gt;		  &amp;gt;</span><br><span class="line">		&quot;		  &amp;quot;</span><br><span class="line">		&apos;		  &amp;#x27;</span><br><span class="line">		/		  &amp;#x2F;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>对用户而言：不要轻信别人给得长连接，禁止浏览器运行Javascript和ActiveX代码</p>
+<h3 id="tip"><a href="#tip" class="headerlink" title="tip"></a>tip</h3><p>· 攻击备忘录（去owasp网站可以搜索到最新的）：<a href="https://owasp.org/www-community/xss-filter-evasion-cheatsheet" target="_blank" rel="noopener">https://owasp.org/www-community/xss-filter-evasion-cheatsheet</a><br>· 防御备忘录：<a href="https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html" target="_blank" rel="noopener">https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html</a><br>· HttpOnly属性不等于解决了XSS问题，只解决了XSS后的cookie劫持问题<br>· <a href="https://juejin.im/post/5bac9e21f265da0afe62ec1b" target="_blank" rel="noopener">对用户输入进行编码具体实现</a></p>
+</li>
+</ul>
+
+      
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/img/alipay.jpg">
+                      <span class="reward-type">支付宝</span>
+                    </div>
+                    
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/img/weixinpay.jpg">
+                      <span class="reward-type">微信</span>
+                    </div>
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">随笔</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">学习</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://xiaoring.ml/2020/01/17/XSS1-1/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
   
   
-    </div></section>
+    <a href="/2019/10/17/vulhub/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">CentOS搭建vulhub</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+  
+  
   
 
-    
+  
+
+  
+
+  
 
 
           </div>
@@ -244,8 +450,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
